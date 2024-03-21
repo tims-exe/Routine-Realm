@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:routine_realm/home.dart';
 
-void main() {
+void main() async {
+
+  //initialize hive
+  await Hive.initFlutter();
+
+  //open the box
+  var box = await Hive.openBox('HabitBox');
+
   runApp(const MyApp());
 
   SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.leanBack,
+    SystemUiMode.immersive,
   );
 }
 

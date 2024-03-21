@@ -16,14 +16,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List habits = [];
+  //varibales
   var HabitTileCount = 0;
   double ProgressPercent = 0;
-  var count = 1;
   var imgIndex = 0;
   String setImg = '';
   List CheckboxImg = ['assets/CheckBoxFalse2.png', 'assets/CheckBoxTrue2.png'];
 
+  //temporary variables
+  List habits = [];
+  var count = 1;
+
+  //Habit Description displays dialog box 
   void HabitDesc() {
     showDialog(
       context: context,
@@ -36,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //dialog box to enter details of new habit
   void NewHabit() {
     showDialog(
       context: context,
@@ -45,6 +50,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // displays habit tile
   Widget HabitTile() {
     return GestureDetector(
       onLongPress: () => HabitDesc(),
@@ -54,15 +60,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    //colors defined
     const color1 = Color.fromRGBO(69, 233, 177, 1);
     const color2 = Color.fromRGBO(11, 100, 119, 1);
     const color_text = Color.fromRGBO(21, 209, 121, 1);
 
-    var prgs = 40;
-    String prgsText = "Today's Progress - $prgs%";
+    //var prgs = 40;
+    String prgsText = "Today's Progress - $ProgressPercent%";
 
     const gradient1 = LinearGradient(colors: [color1, color2]);
 
+    //main container
     return Container(
       padding: const EdgeInsets.only(top: 60, left: 30, right: 30, bottom: 20),
       child: Column(
@@ -153,6 +162,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // adds new habit into a list
   void AddHabit() {
     setState(() {
       habits.add('habit');
@@ -161,6 +171,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // deletes habit from the list
   void DeleteHabit() {
     setState(() {
       habits.removeLast();
