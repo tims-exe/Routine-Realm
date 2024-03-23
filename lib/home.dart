@@ -3,7 +3,9 @@
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:routine_realm/database.dart';
 import 'package:routine_realm/dialog.dart';
 import 'package:routine_realm/habitCard.dart';
 import 'package:routine_realm/newhabit.dart';
@@ -16,6 +18,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //initiate hive box
+  final _myBox = Hive.box('TestBox');
+  RealmDatabase db = RealmDatabase();
+
+  final _controller = TextEditingController();
+
   //varibales
   var HabitTileCount = 0;
   double ProgressPercent = 0;
@@ -23,12 +31,23 @@ class _HomePageState extends State<HomePage> {
   String setImg = '';
   List CheckboxImg = ['assets/CheckBoxFalse2.png', 'assets/CheckBoxTrue2.png'];
 
+  //var index = 100;
+  //List indexs = [];
+
   //temporary variables
   List habits = [];
   var count = 1;
+  List testlist = [];
 
-  //Habit Description displays dialog box 
-  void HabitDesc() {
+  @override
+  void initState() {
+    db.loadData();
+
+    super.initState();
+  }
+
+  //Habit Description displays dialog box
+  void ConfirmDelete() {
     showDialog(
       context: context,
       builder: (context) {
@@ -45,22 +64,54 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) {
-        return NewHabitDialogBox();
+        return NewHabitDialogBox(
+          controller: _controller,
+          onSave: () => AddHabit(),
+        );
       },
     );
   }
 
+  // adds new habit into a list
+  void AddHabit() {
+    setState(() {
+      db.HabitList.add([_controller.text.trim(), false]);
+      _controller.clear();
+    });
+    Navigator.of(context).pop();
+    db.updateDatabase();
+  }
+
+  // deletes habit from the list
+  void DeleteHabit() {
+    setState(() {
+      habits.removeLast();
+      HabitTileCount--;
+      debugPrint('removed');
+      Navigator.of(context).pop();
+    });
+  }
+
   // displays habit tile
-  Widget HabitTile() {
+  Widget HabitTile(int index) {
     return GestureDetector(
-      onLongPress: () => HabitDesc(),
-      child: HabitCard(),
+      onLongPress: () => ConfirmDelete(),
+      child: HabitCard(
+
+      ),
     );
+  }
+
+  void testHive() {
+    /*
+    indexs.add(index);
+    _myBox.put(index, 'micha $index');
+    testlist.add(_myBox.get(index));
+    index++;*/
   }
 
   @override
   Widget build(BuildContext context) {
-
     //colors defined
     const color1 = Color.fromRGBO(69, 233, 177, 1);
     const color2 = Color.fromRGBO(11, 100, 119, 1);
@@ -77,6 +128,8 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          
+          //Title
           ShaderMask(
             shaderCallback: (bounds) {
               return gradient1.createShader(
@@ -95,6 +148,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          
+          //Progress
           Padding(
             padding: const EdgeInsets.only(top: 60, left: 8),
             child: Text(
@@ -107,6 +162,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+
+          //Progress bar
           Padding(
             padding: const EdgeInsets.only(top: 30),
             child: LinearPercentIndicator(
@@ -117,6 +174,8 @@ class _HomePageState extends State<HomePage> {
               progressColor: color_text,
             ),
           ),
+
+          //Realm list header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -139,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                   child: IconButton(
                       onPressed: () {
                         NewHabit();
-                        AddHabit();
+                        //AddHabit();
                       },
                       icon: const Image(
                         image: AssetImage('assets/AddIcon.png'),
@@ -148,37 +207,26 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+
+          // ListView
           SizedBox(
-            height: 420,
+            //height: 420,
+            height: 300,
             //color: color4,
             child: ListView.builder(
-                itemCount: habits.length,
-                itemBuilder: (context, index) {
-                  return HabitTile();
-                }),
+              itemCount: db.HabitList.length,
+              itemBuilder: (context, index) {
+                return HabitTile(index);
+              },
+            ),
           ),
+          FloatingActionButton(
+            onPressed: () => testHive(),
+            child: const Icon(Icons.add),
+          )
         ],
       ),
     );
-  }
-
-  // adds new habit into a list
-  void AddHabit() {
-    setState(() {
-      habits.add('habit');
-      HabitTileCount++;
-      debugPrint(habits[habits.length - 1]);
-    });
-  }
-
-  // deletes habit from the list
-  void DeleteHabit() {
-    setState(() {
-      habits.removeLast();
-      HabitTileCount--;
-      debugPrint('removed');
-      Navigator.of(context).pop();
-    });
   }
 }
 

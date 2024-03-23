@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 
 class HabitCard extends StatefulWidget {
-  const HabitCard({super.key});
+  final String habitName;
+
+  const HabitCard({
+    super.key,
+    required this.habitName,
+  });
 
   @override
   State<HabitCard> createState() => _HabitCardState();
@@ -48,7 +53,7 @@ class _HabitCardState extends State<HabitCard> {
               const Padding(
                 padding: EdgeInsets.only(left: 25),
                 child: Text(
-                  'Test Realm',
+                  habitName,
                   style: TextStyle(
                     color: color_text,
                     fontSize: 25,

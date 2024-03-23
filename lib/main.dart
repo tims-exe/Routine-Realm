@@ -4,12 +4,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:routine_realm/home.dart';
 
 void main() async {
-
   //initialize hive
   await Hive.initFlutter();
 
   //open the box
-  var box = await Hive.openBox('HabitBox');
+  var box = await Hive.openBox('TestBox');
 
   runApp(const MyApp());
 
@@ -19,7 +18,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key,});
+  const MyApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,7 @@ class _RootPageState extends State<RootPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
       body: pages[currentPage],
       /*

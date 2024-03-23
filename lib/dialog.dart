@@ -14,18 +14,18 @@ class DialogBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: const Color.fromRGBO(21, 36, 42, 1),
+      backgroundColor: Color.fromARGB(255, 21, 42, 41),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(16.0))),
       title: const Text(
-        'Description',
+        'Delete Realm ?',
         style: TextStyle(
           color: Color.fromRGBO(232, 253, 242, 1),
           fontSize: 30,
         ),
       ),
       content: const Text(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        '',
         style: TextStyle(
           color: Color.fromRGBO(232, 253, 242, 1),
         ),
