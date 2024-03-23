@@ -43,7 +43,7 @@ class _RootPageState extends State<RootPage> {
   int currentPage = 0;
 
   List<Widget> pages = [
-    HomePage(),
+    Home(),
   ];
   @override
   Widget build(BuildContext context) {

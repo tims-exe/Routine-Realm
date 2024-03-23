@@ -53,7 +53,7 @@ class _HabitCardState extends State<HabitCard> {
               const Padding(
                 padding: EdgeInsets.only(left: 25),
                 child: Text(
-                  habitName,
+                  'habitName',
                   style: TextStyle(
                     color: color_text,
                     fontSize: 25,
