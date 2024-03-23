@@ -16,24 +16,35 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //initiate hive box
-  final _myBox = Hive.box('TestBox');
+  final _myBox = Hive.box('RealmBox');
   RealmDatabase db = RealmDatabase();
 
   //controller to read habit name
   final _controller = TextEditingController();
 
+  //progress variables
+  int checkedHabits = 0;
   double ProgressPercent = 0;
-
-  //checkbox imgs
-  List CheckboxImg = ['assets/CheckBoxFalse2.png', 'assets/CheckBoxTrue2.png'];
-  var imgIndex = 0;
 
   //initial state of the app. Load necessary habits from database
   @override
   void initState() {
     db.loadData();
+    db.checkHabits();
+    checkedHabits = db.checked;
+    updateProgress();
 
     super.initState();
+  }
+
+  void updateProgress() {
+    setState(() {
+      double n = checkedHabits / db.HabitList.length;
+      ProgressPercent = double.parse(n.toStringAsFixed(2));
+      if (ProgressPercent.isNaN) {
+        ProgressPercent = 0;
+      }
+    });
   }
 
   //dialog box to enter details of new habit
@@ -52,9 +63,11 @@ class _HomeState extends State<Home> {
   // adds new habit into a list
   void AddHabit() {
     setState(() {
-      debugPrint("habit name : ${_controller.text}");
-      db.HabitList.add([_controller.text, false]);
-      _controller.clear();
+      if (_controller.text.trim() != '') {
+        db.HabitList.add([_controller.text, false]);
+        _controller.clear();
+        updateProgress();
+      }
     });
     Navigator.of(context).pop();
     db.updateDatabase();
@@ -63,13 +76,23 @@ class _HomeState extends State<Home> {
   void changeStatus(int index) {
     setState(() {
       db.HabitList[index][1] = !db.HabitList[index][1];
+      if (db.HabitList[index][1]) {
+        checkedHabits += 1;
+      } else {
+        checkedHabits -= 1;
+      }
+      updateProgress();
     });
     db.updateDatabase();
   }
 
   void DeleteHabit(int index) {
     setState(() {
+      if (db.HabitList[index][1]) {
+        checkedHabits -= 1;
+      }
       db.HabitList.removeAt(index);
+      updateProgress();
     });
     db.updateDatabase();
   }
@@ -81,8 +104,7 @@ class _HomeState extends State<Home> {
     const color2 = Color.fromRGBO(11, 100, 119, 1);
     const color_text = Color.fromRGBO(21, 209, 121, 1);
 
-    //var prgs = 40;
-    String prgsText = "Today's Progress - $ProgressPercent%";
+    String prgsText = "Progress - ${(ProgressPercent * 100).toInt()}%";
 
     const gradient1 = LinearGradient(colors: [color1, color2]);
 
@@ -160,6 +182,9 @@ class _HomeState extends State<Home> {
                   height: 37,
                   child: IconButton(
                       onPressed: () {
+                        setState(() {
+                          _controller.clear();
+                        });
                         NewHabit();
                       },
                       icon: const Image(
@@ -174,6 +199,7 @@ class _HomeState extends State<Home> {
           SizedBox(
             height: 420,
             child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
               itemCount: db.HabitList.length,
               itemBuilder: (context, index) {
                 return RealmCard(

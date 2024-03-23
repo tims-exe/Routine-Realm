@@ -8,7 +8,7 @@ void main() async {
   await Hive.initFlutter();
 
   //open the box
-  var box = await Hive.openBox('TestBox');
+  var box = await Hive.openBox('RealmBox');
 
   runApp(const MyApp());
 
@@ -51,12 +51,6 @@ class _RootPageState extends State<RootPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromRGBO(26, 26, 26, 1),
       body: pages[currentPage],
-      /*
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-        },
-        child: const Icon(Icons.add),
-      ),*/
     );
   }
 }
