@@ -1,6 +1,10 @@
 # routine_realm
 
-A habit tracker application that helps users track their daily habits and 
+A habit tracker application that helps users track their daily habits. It has a progress bar that helps the user understand how well he's doing on keeping up with his daily habits
+
+This app can be used for users to improve on practicing good habits. 
+
+I used hive as my backend database to store the data in my local device
 
 ## Getting Started
 
