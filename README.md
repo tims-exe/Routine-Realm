@@ -1,6 +1,6 @@
 # routine_realm
 
-A new Flutter project.
+A habit tracker application that helps users track their daily habits and 
 
 ## Getting Started
 
